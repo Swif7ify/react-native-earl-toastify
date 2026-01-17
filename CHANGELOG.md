@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.7] - 2026-01-17
+
+### Removed
+
+- ⚡ **Removed LayoutAnimation**: Removed smooth layout transitions when toasts are dismissed
+    - Eliminates `setLayoutAnimationEnabledExperimental is currently a no-op in the New Architecture` warning
+    - LayoutAnimation doesn't work properly with React Native's New Architecture (Fabric)
+    - Individual toast animations (fade, slide, etc.) still work as expected
+
+---
+
 ## [1.0.5] - 2026-01-17
 
 ### Fixed

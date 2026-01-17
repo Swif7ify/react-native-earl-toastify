@@ -5,13 +5,7 @@ import React, {
 	useMemo,
 	ReactNode,
 } from "react";
-import {
-	View,
-	StyleSheet,
-	LayoutAnimation,
-	Platform,
-	UIManager,
-} from "react-native";
+import { View, StyleSheet } from "react-native";
 import {
 	Toast as ToastData,
 	ToastConfig,
@@ -20,19 +14,6 @@ import {
 	ToastPosition,
 } from "./types";
 import { ToastContainer } from "./ToastContainer";
-
-// Enable LayoutAnimation for Android (not needed in New Architecture)
-if (
-	Platform.OS === "android" &&
-	UIManager.setLayoutAnimationEnabledExperimental &&
-	typeof UIManager.setLayoutAnimationEnabledExperimental === "function"
-) {
-	try {
-		UIManager.setLayoutAnimationEnabledExperimental(true);
-	} catch {
-		// Silently ignore - New Architecture handles this automatically
-	}
-}
 
 /**
  * Toast context for accessing toast functions
@@ -238,11 +219,6 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
 	 * Hide a specific toast by ID
 	 */
 	const hide = useCallback((id: string): void => {
-		// Animate layout before removing toast
-		LayoutAnimation.configureNext({
-			duration: 200,
-			update: { type: LayoutAnimation.Types.easeInEaseOut },
-		});
 		setToasts((prev) => prev.filter((toast) => toast.id !== id));
 	}, []);
 
@@ -250,10 +226,6 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
 	 * Hide all toasts
 	 */
 	const hideAll = useCallback((): void => {
-		LayoutAnimation.configureNext({
-			duration: 200,
-			update: { type: LayoutAnimation.Types.easeInEaseOut },
-		});
 		setToasts([]);
 	}, []);
 
