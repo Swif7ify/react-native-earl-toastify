@@ -2,7 +2,9 @@
 
 A beautiful, customizable toast notification library for React Native with smooth animations, multiple toast types, and full accessibility support.
 
-![npm version](https://img.shields.io/npm/v/react-native-earl-toastify)
+![GitHub stars](https://img.shields.io/github/stars/Swif7ify/react-native-earl-toastify?style=social)
+![npm](https://img.shields.io/npm/v/react-native-earl-toastify)
+![downloads](https://img.shields.io/npm/dm/react-native-earl-toastify)
 ![license](https://img.shields.io/npm/l/react-native-earl-toastify)
 
 ## ✨ Features
