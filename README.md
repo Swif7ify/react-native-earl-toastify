@@ -17,6 +17,7 @@ A beautiful, customizable toast notification library for React Native with smoot
 - 🔧 **Highly Configurable**: duration, dismissable, custom icons, custom styles
 - 📱 **Full-Width Edge Styling**: No rounded corners for top/bottom toasts
 - 🪶 **Zero Dependencies**: Uses only React Native's built-in Animated API
+- ✨ **Smooth Stack Transitions**: Remaining toasts slide smoothly when one is dismissed
 
 ## 📦 Installation
 

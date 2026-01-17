@@ -11,6 +11,7 @@ export interface ToastContainerProps {
 
 /**
  * Container component that positions and renders toasts
+ * Layout animations are handled by ToastProvider
  */
 export const ToastContainer: React.FC<ToastContainerProps> = ({
 	toasts,
