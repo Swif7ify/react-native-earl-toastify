@@ -16,7 +16,7 @@ A beautiful, customizable toast notification library for React Native with smoot
 - 🎯 **Always on Top**: Toasts render above all other content
 - 🔧 **Highly Configurable**: duration, dismissable, custom icons, custom styles
 - 📱 **Full-Width Edge Styling**: No rounded corners for top/bottom toasts
-- 🪶 **Zero Dependencies**: Uses only React Native's built-in Animated API
+- 🪶 **Lightweight**: Uses only React Native's built-in Animated API and react-native-safe-area-context
 
 ## 📸 Preview
 
@@ -55,23 +55,29 @@ https://github.com/user-attachments/assets/0c96e622-eb7e-4074-ac0a-97a0d04a5d31
 ## 📦 Installation
 
 ```bash
-npm install react-native-earl-toastify
+npm install react-native-earl-toastify react-native-safe-area-context
 # or
-yarn add react-native-earl-toastify
+yarn add react-native-earl-toastify react-native-safe-area-context
 ```
+
+> [!IMPORTANT]
+> This library requires `react-native-safe-area-context` as a peer dependency for proper safe area handling across all devices.
 
 ## 🚀 Quick Start
 
-### 1. Wrap your app with ToastProvider
+### 1. Wrap your app with SafeAreaProvider and ToastProvider
 
 ```tsx
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ToastProvider } from "react-native-earl-toastify";
 
 export default function App() {
 	return (
-		<ToastProvider>
-			<YourApp />
-		</ToastProvider>
+		<SafeAreaProvider>
+			<ToastProvider>
+				<YourApp />
+			</ToastProvider>
+		</SafeAreaProvider>
 	);
 }
 ```
@@ -278,16 +284,19 @@ export const ToastWrapper: React.FC<{ children: React.ReactNode }> = ({
 
 ```tsx
 // App.tsx
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ToastProvider } from "react-native-earl-toastify";
 import { ToastWrapper } from "./components/ToastWrapper";
 
 export default function App() {
 	return (
-		<ToastProvider>
-			<ToastWrapper>
-				<YourApp />
-			</ToastWrapper>
-		</ToastProvider>
+		<SafeAreaProvider>
+			<ToastProvider>
+				<ToastWrapper>
+					<YourApp />
+				</ToastWrapper>
+			</ToastProvider>
+		</SafeAreaProvider>
 	);
 }
 ```
@@ -482,11 +491,11 @@ toast.error("Error!", {
 
 ## 🎯 Positioning Behavior
 
-| Position | Behavior                                                    |
-| -------- | ----------------------------------------------------------- |
-| `top`    | Full-width, no rounded corners, accounts for status bar     |
-| `bottom` | Full-width, no rounded corners, accounts for home indicator |
-| `center` | Centered with margins and rounded corners                   |
+| Position | Behavior                                                               |
+| -------- | ---------------------------------------------------------------------- |
+| `top`    | Full-width, no rounded corners, uses SafeAreaView for safe area insets |
+| `bottom` | Full-width, no rounded corners, uses SafeAreaView for safe area insets |
+| `center` | Centered with margins and rounded corners                              |
 
 ## 🎨 Default Color Schemes
 

@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { View, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Toast as ToastData, ToastPosition } from "./types";
 import { Toast } from "./Toast";
 
@@ -11,6 +12,7 @@ export interface ToastContainerProps {
 
 /**
  * Container component that positions and renders toasts
+ * Uses SafeAreaView for proper safe area handling across all devices
  * Layout animations are handled by ToastProvider
  */
 export const ToastContainer: React.FC<ToastContainerProps> = ({
@@ -29,19 +31,57 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({
 	const getContainerPositionStyle = () => {
 		switch (position) {
 			case "top":
-				return { top: 0, paddingTop: 50 }; // 50px for status bar
+				return { top: 0 };
 			case "bottom":
-				return { bottom: 0, paddingBottom: 34 }; // 34px for home indicator
+				return { bottom: 0 };
 			case "center":
 				return { top: 0, bottom: 0, justifyContent: "center" as const };
 			default:
-				return { top: 0, paddingTop: 50 };
+				return { top: 0 };
 		}
 	};
 
+	// Get SafeAreaView edges based on position
+	const getSafeAreaEdges = (): ("top" | "bottom" | "left" | "right")[] => {
+		switch (position) {
+			case "top":
+				return ["top"];
+			case "bottom":
+				return ["bottom"];
+			case "center":
+				return [];
+			default:
+				return ["top"];
+		}
+	};
+
+	// For center position, don't use SafeAreaView
+	if (position === "center") {
+		return (
+			<View
+				style={[styles.container, getContainerPositionStyle()]}
+				pointerEvents="box-none"
+			>
+				{positionedToasts.map((toast, index) => (
+					<View
+						key={toast.id}
+						style={index > 0 ? styles.toastGap : undefined}
+					>
+						<Toast
+							toast={toast}
+							position={position}
+							onHide={onHide}
+						/>
+					</View>
+				))}
+			</View>
+		);
+	}
+
 	return (
-		<View
+		<SafeAreaView
 			style={[styles.container, getContainerPositionStyle()]}
+			edges={getSafeAreaEdges()}
 			pointerEvents="box-none"
 		>
 			{positionedToasts.map((toast, index) => (
@@ -52,7 +92,7 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({
 					<Toast toast={toast} position={position} onHide={onHide} />
 				</View>
 			))}
-		</View>
+		</SafeAreaView>
 	);
 };
 
