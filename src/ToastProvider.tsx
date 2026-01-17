@@ -21,12 +21,17 @@ import {
 } from "./types";
 import { ToastContainer } from "./ToastContainer";
 
-// Enable LayoutAnimation for Android
+// Enable LayoutAnimation for Android (not needed in New Architecture)
 if (
 	Platform.OS === "android" &&
-	UIManager.setLayoutAnimationEnabledExperimental
+	UIManager.setLayoutAnimationEnabledExperimental &&
+	typeof UIManager.setLayoutAnimationEnabledExperimental === "function"
 ) {
-	UIManager.setLayoutAnimationEnabledExperimental(true);
+	try {
+		UIManager.setLayoutAnimationEnabledExperimental(true);
+	} catch {
+		// Silently ignore - New Architecture handles this automatically
+	}
 }
 
 /**

@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.5] - 2026-01-17
+
+### Fixed
+
+- 🔇 **New Architecture Compatibility**: Silenced `setLayoutAnimationEnabledExperimental` warning on React Native's New Architecture (Fabric)
+    - LayoutAnimation is enabled by default in Fabric, so the experimental call is no longer needed
+    - Added try-catch to gracefully handle both old and new architectures
+
+---
+
+## [1.0.4] - 2026-01-17
+
+### Changed
+
+- 🔧 **Safe Area Handling**: Migrated from hardcoded padding values to `react-native-safe-area-context` for proper safe area handling across all devices
+    - No more magic numbers (50px for status bar, 34px for home indicator)
+    - Uses `SafeAreaView` with dynamic edge detection for top/bottom positioned toasts
+    - Proper support for devices with notches, dynamic islands, and various home indicator sizes
+
+### Added
+
+- 📦 **New Peer Dependency**: `react-native-safe-area-context` (>=3.0.0) is now required
+    - Users must wrap their app with `SafeAreaProvider` for toasts to work correctly
+    - Updated README with installation and setup instructions
+
+---
+
 ## [1.0.3] - 2026-01-17
 
 ### Added
