@@ -20,7 +20,7 @@ import {
 	iconContainerStyle,
 	closeButtonStyle,
 } from "./styles";
-import { DefaultIcons } from "../src/icons";
+import { DefaultIcons } from "./icons";
 
 export interface ToastProps {
 	toast: ToastData;

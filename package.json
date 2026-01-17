@@ -40,6 +40,10 @@
 		"url": "https://github.com/Swif7ify/react-native-earl-toastify/issues"
 	},
 	"homepage": "https://github.com/Swif7ify/react-native-earl-toastify#readme",
+	"funding": {
+		"type": "github",
+		"url": "https://github.com/sponsors/Swif7ify"
+	},
 	"peerDependencies": {
 		"react": ">=17.0.0",
 		"react-native": ">=0.64.0"

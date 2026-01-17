@@ -62,3 +62,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `hide(id)` - Hide specific toast by ID
 - `hideAll()` - Hide all visible toasts
 - Full TypeScript support with exported types
+
+#### Global Toast Utility Pattern
+
+- Documented pattern for creating a global Toast utility
+- Supports calling `Toast.success()`, `Toast.error()` etc. from anywhere in your app
+- Customizable defaults for colors, animations, icons per toast type
+- No deprecated APIs - uses simple variable-based context storage
