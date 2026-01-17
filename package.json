@@ -1,6 +1,6 @@
 {
 	"name": "react-native-earl-toastify",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "A beautiful, customizable toast notification library for React Native with animations, multiple toast types, and accessibility support",
 	"main": "dist/index.js",
 	"module": "dist/index.js",
