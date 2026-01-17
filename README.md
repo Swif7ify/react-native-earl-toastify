@@ -2,9 +2,7 @@
 
 A beautiful, customizable toast notification library for React Native with smooth animations, multiple toast types, and full accessibility support.
 
-![GitHub stars](https://img.shields.io/github/stars/Swif7ify/react-native-earl-toastify?style=social)
-![npm](https://img.shields.io/npm/v/react-native-earl-toastify)
-![downloads](https://img.shields.io/npm/dm/react-native-earl-toastify)
+![npm version](https://img.shields.io/npm/v/react-native-earl-toastify)
 ![license](https://img.shields.io/npm/l/react-native-earl-toastify)
 
 ## ✨ Features
@@ -17,7 +15,46 @@ A beautiful, customizable toast notification library for React Native with smoot
 - 🔧 **Highly Configurable**: duration, dismissable, custom icons, custom styles
 - 📱 **Full-Width Edge Styling**: No rounded corners for top/bottom toasts
 - 🪶 **Zero Dependencies**: Uses only React Native's built-in Animated API
-- ✨ **Smooth Stack Transitions**: Remaining toasts slide smoothly when one is dismissed
+
+## 📸 Preview
+
+<!-- Add your screenshots here -->
+<!-- ![Toast Types](./assets/toast-types.png) -->
+<!-- ![Animations Demo](./assets/animations.gif) -->
+
+<table>
+  <tr>
+    <td align="center">
+      <b>Success</b><br/>
+      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/1.png" width="220"/>
+    </td>
+    <td align="center">
+      <b>Warning</b><br/>
+      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/2.png" width="220"/>
+    </td>
+    <td align="center">
+      <b>Error</b><br/>
+      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/3.png" width="220"/>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <b>Info</b><br/>
+      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/4.png" width="220"/>
+    </td>
+    <td align="center">
+      <b>Show</b><br/>
+      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/5.png" width="220"/>
+    </td>
+    <td></td>
+  </tr>
+</table>
+
+
+### 🎥 Demo Video
+https://github.com/user-attachments/assets/0c96e622-eb7e-4074-ac0a-97a0d04a5d31
+
+
 
 ## 📦 Installation
 
@@ -70,184 +107,57 @@ function MyComponent() {
 
 ## 🛠️ Creating a Toast Utility (Recommended)
 
-For easier usage across your app, create a utility file that exposes toast functions globally with **your own custom defaults**:
+For easier usage across your app, create a utility file that exposes toast functions globally:
 
 ### 1. Create `utils/Toast.tsx`
 
 ```tsx
 // utils/Toast.tsx
+import React, { createRef } from "react";
 import { ToastContextValue, ToastConfig } from "react-native-earl-toastify";
-// Optional: import your icon library
-// import { CheckCircle, AlertTriangle, XCircle, Info } from "lucide-react-native";
 
-// ============================================
-// Store toast context reference (simple variable)
-// ============================================
-let toastContext: ToastContextValue | null = null;
+// Create a ref to hold the toast context
+export const toastRef = createRef<ToastContextValue>();
 
-export const setToastContext = (context: ToastContextValue) => {
-	toastContext = context;
-};
-
-// ============================================
-// 🎨 CUSTOMIZE YOUR TOAST DEFAULTS HERE
-// ============================================
-
-const CUSTOM_DEFAULTS: Record<string, Partial<ToastConfig>> = {
-	// Custom success style - your own green, animation, etc.
-	success: {
-		backgroundColor: "#D1FAE5", // Light green
-		textColor: "#065F46", // Dark green
-		borderColor: "#10B981", // Green border
-		animationIn: "up",
-		animationOut: "down",
-		position: "bottom",
-		duration: 3000,
-		// icon: <CheckCircle color="#10B981" size={20} />,
-	},
-
-	// Custom error style
-	error: {
-		backgroundColor: "#FEE2E2", // Light red
-		textColor: "#991B1B", // Dark red
-		borderColor: "#EF4444", // Red border
-		animationIn: "fade",
-		animationOut: "fade",
-		position: "top",
-		duration: 5000,
-		// icon: <XCircle color="#EF4444" size={20} />,
-	},
-
-	// Custom warning style
-	warning: {
-		backgroundColor: "#FEF3C7", // Light amber
-		textColor: "#92400E", // Dark amber
-		borderColor: "#F59E0B", // Amber border
-		animationIn: "right",
-		animationOut: "left",
-		position: "top",
-		duration: 4000,
-		// icon: <AlertTriangle color="#F59E0B" size={20} />,
-	},
-
-	// Custom info style
-	info: {
-		backgroundColor: "#DBEAFE", // Light blue
-		textColor: "#1E40AF", // Dark blue
-		borderColor: "#3B82F6", // Blue border
-		animationIn: "left",
-		animationOut: "right",
-		position: "top",
-		duration: 3000,
-		// icon: <Info color="#3B82F6" size={20} />,
-	},
-};
-
-// ============================================
-// Helper to parse flexible arguments
-// ============================================
-const parseArgs = (
-	titleOrMessage: string,
-	descriptionOrConfig?: string | Partial<ToastConfig>,
-	config?: Partial<ToastConfig>,
-): { title?: string; message: string; config?: Partial<ToastConfig> } => {
-	if (typeof descriptionOrConfig === "string") {
-		return { title: titleOrMessage, message: descriptionOrConfig, config };
-	}
-	return { message: titleOrMessage, config: descriptionOrConfig };
-};
-
-// ============================================
-// Toast utility with custom defaults
-// ============================================
+// Export convenience methods
 const Toast = {
+	// Supports: success("message") OR success("title", "description")
 	success: (
 		titleOrMessage: string,
 		descriptionOrConfig?: string | Partial<ToastConfig>,
 		config?: Partial<ToastConfig>,
 	) => {
-		const {
-			title,
-			message,
-			config: cfg,
-		} = parseArgs(titleOrMessage, descriptionOrConfig, config);
-		toastContext?.show({
-			...CUSTOM_DEFAULTS.success,
-			...cfg,
-			title,
-			message,
-			type: "custom", // Use custom to apply our colors
-		});
+		toastRef.current?.success(titleOrMessage, descriptionOrConfig, config);
 	},
-
 	error: (
 		titleOrMessage: string,
 		descriptionOrConfig?: string | Partial<ToastConfig>,
 		config?: Partial<ToastConfig>,
 	) => {
-		const {
-			title,
-			message,
-			config: cfg,
-		} = parseArgs(titleOrMessage, descriptionOrConfig, config);
-		toastContext?.show({
-			...CUSTOM_DEFAULTS.error,
-			...cfg,
-			title,
-			message,
-			type: "custom",
-		});
+		toastRef.current?.error(titleOrMessage, descriptionOrConfig, config);
 	},
-
 	warning: (
 		titleOrMessage: string,
 		descriptionOrConfig?: string | Partial<ToastConfig>,
 		config?: Partial<ToastConfig>,
 	) => {
-		const {
-			title,
-			message,
-			config: cfg,
-		} = parseArgs(titleOrMessage, descriptionOrConfig, config);
-		toastContext?.show({
-			...CUSTOM_DEFAULTS.warning,
-			...cfg,
-			title,
-			message,
-			type: "custom",
-		});
+		toastRef.current?.warning(titleOrMessage, descriptionOrConfig, config);
 	},
-
 	info: (
 		titleOrMessage: string,
 		descriptionOrConfig?: string | Partial<ToastConfig>,
 		config?: Partial<ToastConfig>,
 	) => {
-		const {
-			title,
-			message,
-			config: cfg,
-		} = parseArgs(titleOrMessage, descriptionOrConfig, config);
-		toastContext?.show({
-			...CUSTOM_DEFAULTS.info,
-			...cfg,
-			title,
-			message,
-			type: "custom",
-		});
+		toastRef.current?.info(titleOrMessage, descriptionOrConfig, config);
 	},
-
-	// Generic show for full customization
 	show: (config: ToastConfig) => {
-		toastContext?.show(config);
+		toastRef.current?.show(config);
 	},
-
 	hide: (id: string) => {
-		toastContext?.hide(id);
+		toastRef.current?.hide(id);
 	},
-
 	hideAll: () => {
-		toastContext?.hideAll();
+		toastRef.current?.hideAll();
 	},
 };
 
@@ -260,7 +170,7 @@ export default Toast;
 // components/ToastWrapper.tsx
 import React, { useEffect } from "react";
 import { useToast } from "react-native-earl-toastify";
-import { setToastContext } from "../utils/Toast";
+import { toastRef } from "../utils/Toast";
 
 export const ToastWrapper: React.FC<{ children: React.ReactNode }> = ({
 	children,
@@ -268,8 +178,8 @@ export const ToastWrapper: React.FC<{ children: React.ReactNode }> = ({
 	const toast = useToast();
 
 	useEffect(() => {
-		// Set the toast context when component mounts
-		setToastContext(toast);
+		// Assign the toast context to the ref
+		(toastRef as React.MutableRefObject<typeof toast>).current = toast;
 	}, [toast]);
 
 	return <>{children}</>;
