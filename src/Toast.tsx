@@ -6,7 +6,18 @@ import {
 	View,
 	StyleSheet,
 	AccessibilityInfo,
+	LayoutAnimation,
+	Platform,
+	UIManager,
 } from "react-native";
+
+// Enable LayoutAnimation for Android
+if (
+	Platform.OS === "android" &&
+	UIManager.setLayoutAnimationEnabledExperimental
+) {
+	UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 import { Toast as ToastData, ToastPosition, ToastAnimation } from "./types";
 import { useToastAnimation } from "./useToastAnimation";
 import {
@@ -87,6 +98,11 @@ export const Toast: React.FC<ToastProps> = ({ toast, position, onHide }) => {
 		// Start exit animation
 		startExitAnimation(() => {
 			onHideCallback?.();
+			// Trigger layout animation RIGHT BEFORE removing from state
+			LayoutAnimation.configureNext({
+				duration: 200,
+				update: { type: LayoutAnimation.Types.easeInEaseOut },
+			});
 			onHide(id);
 		});
 	}, [id, onHide, onHideCallback, startExitAnimation]);
