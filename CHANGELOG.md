@@ -5,6 +5,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-01-30
+
+### Added
+
+- 🎉 **Confirmation Modal**: New accessible confirmation modal component
+    - `ModalProvider` - Context provider for modal state management
+    - `useModal` hook - Access modal functions from any component
+    - `ConfirmModal` - Customizable modal component with animations
+    - Promise-based API: `modal.confirm()`, `modal.warning()`, `modal.danger()`, `modal.info()`
+
+- ♿ **WCAG 2.1 AA Accessibility**:
+    - Screen reader announcements via `AccessibilityInfo.announceForAccessibility`
+    - Proper `accessibilityRole="alert"` and `accessibilityViewIsModal={true}`
+    - Minimum 48px touch targets for all buttons (exceeds WCAG 2.5.5 requirements)
+    - Clear button labels with accessibility hints
+    - Backdrop dismissal with accessibility support
+
+- 🎨 **Modal Types**: 5 pre-styled modal types
+    - `confirm` - Blue themed for standard confirmations
+    - `warning` - Amber themed for warnings
+    - `danger` - Red themed for destructive actions
+    - `info` - Purple themed for informational dialogs
+    - `custom` - Fully customizable
+
+- 🎬 **Modal Animations**: 4 animation types
+    - `scale` - Scale and fade (default)
+    - `fade` - Fade in/out
+    - `slide` - Slide from bottom
+    - `none` - Instant appear/disappear
+
+- 🔧 **Full Customization**:
+    - Custom colors for background, text, and buttons
+    - Custom button text
+    - Custom icons
+    - Custom styles for container, title, message, and buttons
+    - Configurable backdrop dismiss behavior
+
+---
+
 ## [1.0.7] - 2026-01-17
 
 ### Removed

@@ -1,6 +1,6 @@
 # react-native-earl-toastify
 
-A beautiful, customizable toast notification library for React Native with smooth animations, multiple toast types, and full accessibility support.
+A beautiful, customizable toast notification and confirmation modal library for React Native with smooth animations, multiple types, and full accessibility support.
 
 ![GitHub stars](https://img.shields.io/github/stars/Swif7ify/react-native-earl-toastify?style=social)
 ![npm](https://img.shields.io/npm/v/react-native-earl-toastify)
@@ -9,49 +9,95 @@ A beautiful, customizable toast notification library for React Native with smoot
 
 ## ✨ Features
 
+### Toast Notifications
+
 - 🎬 **6 Animation Types**: fade, slide-up, slide-down, slide-left, slide-right, none
 - 🎨 **5 Toast Types**: success, warning, error, info, default + fully customizable
 - 📍 **3 Positions**: top, bottom, center
-- ♿ **Accessible**: WCAG 2.1 AA compliant color schemes & screen reader support
 - 🎯 **Always on Top**: Toasts render above all other content
-- 🔧 **Highly Configurable**: duration, dismissable, custom icons, custom styles
 - 📱 **Full-Width Edge Styling**: No rounded corners for top/bottom toasts
-- 🪶 **Lightweight**: Zero external animation dependencies - uses only React Native's built-in Animated API
+
+### Confirmation Modal (NEW!)
+
+- 🎉 **Promise-based API**: `await modal.confirm()` returns true/false
+- 🎨 **5 Modal Types**: confirm, warning, danger, info, custom
+- 🎬 **4 Animation Types**: scale, fade, slide, none
+- 🔘 **Customizable Buttons**: Text, colors, and styles
+
+### Common Features
+
+- ♿ **WCAG 2.1 AA Accessible**: Proper contrast ratios, screen reader support, 48px touch targets
+- 🔧 **Highly Configurable**: Custom icons, colors, styles, and callbacks
+- 🪶 **Lightweight**: Zero external animation dependencies
 - 🏛️ **New Architecture Ready**: Fully compatible with React Native's New Architecture (Fabric)
 
-## 📸 Preview
+## 🍞 Toast Preview
 
 <table>
   <tr>
     <td align="center">
       <b>Success</b><br/>
-      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/1.png" width="220"/>
+      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/1.jpg" width="220"/>
     </td>
     <td align="center">
       <b>Warning</b><br/>
-      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/2.png" width="220"/>
+      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/2.jpg" width="220"/>
     </td>
     <td align="center">
       <b>Error</b><br/>
-      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/3.png" width="220"/>
+      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/3.jpg" width="220"/>
     </td>
   </tr>
   <tr>
     <td align="center">
       <b>Info</b><br/>
-      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/4.png" width="220"/>
+      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/4.jpg" width="220"/>
     </td>
     <td align="center">
       <b>Show</b><br/>
-      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/5.png" width="220"/>
+      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/5.jpg" width="220"/>
     </td>
     <td></td>
   </tr>
 </table>
 
-### 🎥 Demo Video
+## 🪟 Modal Preview
+
+<table>
+  <tr>
+    <td align="center">
+      <b>Confirm</b><br/>
+      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/6.jpg" width="220"/>
+    </td>
+    <td align="center">
+      <b>Warning</b><br/>
+      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/7.jpg" width="220"/>
+    </td>
+    <td align="center">
+      <b>Danger</b><br/>
+      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/8.jpg" width="220"/>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <b>Info</b><br/>
+      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/9.jpg" width="220"/>
+    </td>
+    <td align="center">
+      <b>Custom</b><br/>
+      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/10.jpg" width="220"/>
+    </td>
+    <td></td>
+  </tr>
+</table>
+
+### 🎥🍞 Toast Demo Video
 
 https://github.com/user-attachments/assets/0c96e622-eb7e-4074-ac0a-97a0d04a5d31
+
+### 🎥🪟 Modal Demo Video
+
+https://github.com/user-attachments/assets/1b98e721-0aa6-488b-b30b-cc2af8d162cd
 
 ## 📦 Installation
 
@@ -66,17 +112,19 @@ yarn add react-native-earl-toastify react-native-safe-area-context
 
 ## 🚀 Quick Start
 
-### 1. Wrap your app with SafeAreaProvider and ToastProvider
+### 1. Wrap your app with SafeAreaProvider, ToastProvider, and ModalProvider
 
 ```tsx
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { ToastProvider } from "react-native-earl-toastify";
+import { ToastProvider, ModalProvider } from "react-native-earl-toastify";
 
 export default function App() {
 	return (
 		<SafeAreaProvider>
 			<ToastProvider>
-				<YourApp />
+				<ModalProvider>
+					<YourApp />
+				</ModalProvider>
 			</ToastProvider>
 		</SafeAreaProvider>
 	);
@@ -516,6 +564,153 @@ All color combinations meet **WCAG 2.1 AA** contrast requirements (4.5:1 minimum
 - Proper `accessibilityRole="alert"` and `accessibilityLiveRegion="polite"` attributes
 - Dismissable toasts have clear accessibility hints
 - Color contrasts meet WCAG 2.1 AA standards
+
+---
+
+# 🔔 Confirmation Modal
+
+## Modal Quick Start
+
+### Use the useModal hook
+
+```tsx
+import { useModal, useToast } from "react-native-earl-toastify";
+
+function MyComponent() {
+	const toast = useToast();
+	const modal = useModal();
+
+	const handleDelete = async () => {
+		const confirmed = await modal.confirm(
+			"Delete Item",
+			"Are you sure you want to delete this item?",
+		);
+
+		if (confirmed) {
+			toast.success("Item deleted successfully!");
+		}
+	};
+
+	return <Button title="Delete" onPress={handleDelete} />;
+}
+```
+
+## Modal Methods
+
+```typescript
+const modal = useModal();
+
+// Confirmation modal (blue)
+const confirmed = await modal.confirm("Title", "Message");
+
+// Warning modal (amber)
+const proceed = await modal.warning(
+	"Warning",
+	"This action may have consequences",
+);
+
+// Danger modal (red) - for destructive actions
+const deleted = await modal.danger("Delete Account", "This cannot be undone");
+
+// Info modal (purple) - single "OK" button
+await modal.info("Information", "Your changes have been saved");
+
+// Custom modal with full configuration
+await modal.show({
+	title: "Custom Modal",
+	message: "Fully customizable message",
+	type: "custom",
+	confirmText: "Accept",
+	cancelText: "Decline",
+	confirmButtonColor: "#8B5CF6",
+});
+```
+
+## ModalConfig
+
+| Option                   | Type             | Default      | Description                      |
+| ------------------------ | ---------------- | ------------ | -------------------------------- |
+| `title`                  | `string`         | **required** | Modal title                      |
+| `message`                | `string`         | **required** | Modal message                    |
+| `type`                   | `ModalType`      | `'confirm'`  | Modal type                       |
+| `confirmText`            | `string`         | `'Confirm'`  | Confirm button text              |
+| `cancelText`             | `string`         | `'Cancel'`   | Cancel button text               |
+| `showCancel`             | `boolean`        | `true`       | Show cancel button               |
+| `dismissOnBackdrop`      | `boolean`        | `true`       | Tap backdrop to dismiss          |
+| `animationIn`            | `ModalAnimation` | `'scale'`    | Enter animation                  |
+| `animationOut`           | `ModalAnimation` | `'scale'`    | Exit animation                   |
+| `icon`                   | `ReactNode`      | -            | Custom icon element              |
+| `hideIcon`               | `boolean`        | `false`      | Hide the icon                    |
+| `backgroundColor`        | `string`         | -            | Custom background color          |
+| `textColor`              | `string`         | -            | Custom text color                |
+| `confirmButtonColor`     | `string`         | -            | Custom confirm button color      |
+| `confirmButtonTextColor` | `string`         | -            | Custom confirm button text color |
+| `cancelButtonColor`      | `string`         | -            | Custom cancel button color       |
+| `cancelButtonTextColor`  | `string`         | -            | Custom cancel button text color  |
+
+## Modal Types
+
+| Type      | Icon | Confirm Button | Use Case                     |
+| --------- | ---- | -------------- | ---------------------------- |
+| `confirm` | ✓    | Blue           | Standard confirmations       |
+| `warning` | !    | Amber          | Warning/caution dialogs      |
+| `danger`  | ✕    | Red            | Destructive actions (delete) |
+| `info`    | i    | Purple         | Informational dialogs        |
+| `custom`  | ?    | Blue           | Fully customizable           |
+
+## Modal Animation Types
+
+| Animation | Description              |
+| --------- | ------------------------ |
+| `scale`   | Scale and fade (default) |
+| `fade`    | Fade in/out              |
+| `slide`   | Slide from bottom        |
+| `none`    | Instant appear/disappear |
+
+## Modal Examples
+
+### Danger Modal for Delete Action
+
+```tsx
+const handleDelete = async () => {
+	const confirmed = await modal.danger(
+		"Delete Account",
+		"This will permanently delete your account and all data. This action cannot be undone.",
+		{
+			confirmText: "Delete Forever",
+			cancelText: "Keep Account",
+		},
+	);
+
+	if (confirmed) {
+		await deleteAccount();
+	}
+};
+```
+
+### Custom Styled Modal
+
+```tsx
+await modal.show({
+	title: "Premium Feature",
+	message: "Upgrade to Pro to unlock this feature!",
+	type: "custom",
+	confirmText: "Upgrade Now",
+	cancelText: "Maybe Later",
+	confirmButtonColor: "#8B5CF6",
+	confirmButtonTextColor: "#FFFFFF",
+	hideIcon: true,
+});
+```
+
+### Info Modal (Single Button)
+
+```tsx
+await modal.info("Success!", "Your profile has been updated successfully.");
+// User clicks "OK" to dismiss
+```
+
+---
 
 ## 📄 License
 
