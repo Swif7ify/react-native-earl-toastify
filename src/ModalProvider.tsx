@@ -13,7 +13,13 @@ import {
 	ModalContextValue,
 	ModalProviderConfig,
 } from "./modalTypes";
+import {
+	InputModal as InputModalData,
+	InputModalConfig,
+	InputModalResult,
+} from "./inputModalTypes";
 import { ConfirmModal } from "./ConfirmModal";
+import { InputModal } from "./InputModal";
 
 /**
  * Modal context for accessing modal functions
@@ -45,7 +51,7 @@ export interface ModalProviderProps {
 }
 
 /**
- * ModalProvider - Wrap your app with this component to enable confirmation modals
+ * ModalProvider - Wrap your app with this component to enable confirmation and input modals
  *
  * @example
  * ```tsx
@@ -58,14 +64,25 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({
 	children,
 	config = {},
 }) => {
-	const [modal, setModal] = useState<ModalData | null>(null);
-	const resolverRef = useRef<((confirmed: boolean) => void) | null>(null);
+	// Confirm modal state
+	const [confirmModal, setConfirmModal] = useState<ModalData | null>(null);
+	const confirmResolverRef = useRef<((confirmed: boolean) => void) | null>(
+		null,
+	);
+
+	// Input modal state
+	const [inputModal, setInputModal] = useState<InputModalData | null>(null);
+	const inputResolverRef = useRef<
+		((result: InputModalResult) => void) | null
+	>(null);
 
 	// Merge config with defaults
 	const mergedConfig = useMemo(
 		() => ({ ...DEFAULT_CONFIG, ...config }),
 		[config],
 	);
+
+	// ============ Confirm Modal Methods ============
 
 	/**
 	 * Show a modal notification
@@ -75,7 +92,7 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({
 		(modalConfig: ModalConfig): Promise<boolean> => {
 			return new Promise((resolve) => {
 				// Store resolver for later
-				resolverRef.current = resolve;
+				confirmResolverRef.current = resolve;
 
 				const id = generateId();
 
@@ -122,7 +139,7 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({
 					resolve,
 				};
 
-				setModal(newModal);
+				setConfirmModal(newModal);
 			});
 		},
 		[mergedConfig],
@@ -246,36 +263,228 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({
 	 * Hide the current modal (resolves as cancelled)
 	 */
 	const hide = useCallback((): void => {
-		if (resolverRef.current) {
-			resolverRef.current(false);
-			resolverRef.current = null;
+		if (confirmResolverRef.current) {
+			confirmResolverRef.current(false);
+			confirmResolverRef.current = null;
 		}
-		setModal(null);
+		if (inputResolverRef.current) {
+			inputResolverRef.current({ confirmed: false, value: "" });
+			inputResolverRef.current = null;
+		}
+		setConfirmModal(null);
+		setInputModal(null);
 	}, []);
 
 	/**
-	 * Handle confirm action
+	 * Handle confirm action for confirm modal
 	 */
-	const handleConfirm = useCallback(() => {
-		if (modal) {
-			modal.onConfirm?.();
-			modal.resolve(true);
+	const handleConfirmConfirm = useCallback(() => {
+		if (confirmModal) {
+			confirmModal.onConfirm?.();
+			confirmModal.resolve(true);
 		}
-		setModal(null);
-		resolverRef.current = null;
-	}, [modal]);
+		setConfirmModal(null);
+		confirmResolverRef.current = null;
+	}, [confirmModal]);
 
 	/**
-	 * Handle cancel action
+	 * Handle cancel action for confirm modal
 	 */
-	const handleCancel = useCallback(() => {
-		if (modal) {
-			modal.onCancel?.();
-			modal.resolve(false);
+	const handleConfirmCancel = useCallback(() => {
+		if (confirmModal) {
+			confirmModal.onCancel?.();
+			confirmModal.resolve(false);
 		}
-		setModal(null);
-		resolverRef.current = null;
-	}, [modal]);
+		setConfirmModal(null);
+		confirmResolverRef.current = null;
+	}, [confirmModal]);
+
+	// ============ Input Modal Methods ============
+
+	/**
+	 * Show an input modal
+	 * Returns a Promise that resolves to InputModalResult
+	 */
+	const input = useCallback(
+		(inputConfig: InputModalConfig): Promise<InputModalResult> => {
+			return new Promise((resolve) => {
+				// Store resolver for later
+				inputResolverRef.current = resolve;
+
+				const id = generateId();
+
+				const newInputModal: InputModalData = {
+					id,
+					title: inputConfig.title,
+					message: inputConfig.message,
+					type: inputConfig.type || "confirm",
+					confirmText:
+						inputConfig.confirmText ||
+						mergedConfig.defaultConfirmText,
+					cancelText:
+						inputConfig.cancelText ||
+						mergedConfig.defaultCancelText,
+					showCancel: inputConfig.showCancel ?? true,
+					dismissOnBackdrop: inputConfig.dismissOnBackdrop ?? false, // Default false for input
+					animationIn:
+						inputConfig.animationIn ||
+						mergedConfig.defaultAnimationIn,
+					animationOut:
+						inputConfig.animationOut ||
+						mergedConfig.defaultAnimationOut,
+					animationDuration:
+						inputConfig.animationDuration ||
+						mergedConfig.defaultAnimationDuration,
+					icon: inputConfig.icon,
+					hideIcon: inputConfig.hideIcon,
+					inputMode: inputConfig.inputMode || "text",
+					placeholder: inputConfig.placeholder,
+					defaultValue: inputConfig.defaultValue,
+					restrictions: inputConfig.restrictions,
+					otpConfig: inputConfig.otpConfig,
+					validateOnChange: inputConfig.validateOnChange,
+					customValidator: inputConfig.customValidator,
+					inputLabel: inputConfig.inputLabel,
+					helperText: inputConfig.helperText,
+					keyboardType: inputConfig.keyboardType,
+					autoCapitalize: inputConfig.autoCapitalize,
+					secureTextEntry: inputConfig.secureTextEntry,
+					autoFocus: inputConfig.autoFocus ?? true,
+					returnKeyType: inputConfig.returnKeyType,
+					backgroundColor: inputConfig.backgroundColor,
+					textColor: inputConfig.textColor,
+					confirmButtonColor: inputConfig.confirmButtonColor,
+					confirmButtonTextColor: inputConfig.confirmButtonTextColor,
+					cancelButtonColor: inputConfig.cancelButtonColor,
+					cancelButtonTextColor: inputConfig.cancelButtonTextColor,
+					style: inputConfig.style,
+					titleStyle: inputConfig.titleStyle,
+					messageStyle: inputConfig.messageStyle,
+					inputContainerStyle: inputConfig.inputContainerStyle,
+					inputStyle: inputConfig.inputStyle,
+					errorStyle: inputConfig.errorStyle,
+					labelStyle: inputConfig.labelStyle,
+					helperStyle: inputConfig.helperStyle,
+					confirmButtonStyle: inputConfig.confirmButtonStyle,
+					cancelButtonStyle: inputConfig.cancelButtonStyle,
+					accessibilityLabel: inputConfig.accessibilityLabel,
+					inputAccessibilityHint: inputConfig.inputAccessibilityHint,
+					onConfirm: inputConfig.onConfirm,
+					onCancel: inputConfig.onCancel,
+					resolve,
+				};
+
+				setInputModal(newInputModal);
+			});
+		},
+		[mergedConfig],
+	);
+
+	/**
+	 * Show a confirmation text input modal
+	 * User must type the exact confirmation text to proceed
+	 */
+	const confirmWithText = useCallback(
+		(
+			title: string,
+			message: string,
+			confirmationText: string,
+			config?: Partial<InputModalConfig>,
+		): Promise<InputModalResult> => {
+			return input({
+				...config,
+				title,
+				message,
+				type: config?.type || "danger",
+				inputMode: "text",
+				restrictions: {
+					...config?.restrictions,
+					confirmationText,
+					caseSensitive: config?.restrictions?.caseSensitive ?? false,
+				},
+				confirmText: config?.confirmText || "Confirm",
+				helperText:
+					config?.helperText ||
+					`Type "${confirmationText}" to confirm`,
+			});
+		},
+		[input],
+	);
+
+	/**
+	 * Show an OTP/verification code input modal
+	 */
+	const otp = useCallback(
+		(
+			title: string,
+			message: string,
+			config?: Partial<InputModalConfig>,
+		): Promise<InputModalResult> => {
+			return input({
+				...config,
+				title,
+				message,
+				type: config?.type || "confirm",
+				inputMode: "otp",
+				restrictions: {
+					numbersOnly: true,
+					...config?.restrictions,
+				},
+			});
+		},
+		[input],
+	);
+
+	/**
+	 * Show a PIN input modal (masked by default)
+	 */
+	const pin = useCallback(
+		(
+			title: string,
+			message: string,
+			config?: Partial<InputModalConfig>,
+		): Promise<InputModalResult> => {
+			return input({
+				...config,
+				title,
+				message,
+				type: config?.type || "confirm",
+				inputMode: "pin",
+				restrictions: {
+					numbersOnly: true,
+					...config?.restrictions,
+				},
+			});
+		},
+		[input],
+	);
+
+	/**
+	 * Handle confirm action for input modal
+	 */
+	const handleInputConfirm = useCallback(
+		(value: string) => {
+			if (inputModal) {
+				inputModal.onConfirm?.(value);
+				inputModal.resolve({ confirmed: true, value });
+			}
+			setInputModal(null);
+			inputResolverRef.current = null;
+		},
+		[inputModal],
+	);
+
+	/**
+	 * Handle cancel action for input modal
+	 */
+	const handleInputCancel = useCallback(() => {
+		if (inputModal) {
+			inputModal.onCancel?.();
+			inputModal.resolve({ confirmed: false, value: "" });
+		}
+		setInputModal(null);
+		inputResolverRef.current = null;
+	}, [inputModal]);
 
 	// Context value
 	const contextValue = useMemo<ModalContextValue>(
@@ -286,20 +495,43 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({
 			danger,
 			info,
 			hide,
+			input,
+			confirmWithText,
+			otp,
+			pin,
 		}),
-		[show, confirm, warning, danger, info, hide],
+		[
+			show,
+			confirm,
+			warning,
+			danger,
+			info,
+			hide,
+			input,
+			confirmWithText,
+			otp,
+			pin,
+		],
 	);
 
 	return (
 		<ModalContext.Provider value={contextValue}>
 			<View style={styles.container}>
 				{children}
-				{/* Render modal if present */}
-				{modal && (
+				{/* Render confirm modal if present */}
+				{confirmModal && (
 					<ConfirmModal
-						modal={modal}
-						onConfirm={handleConfirm}
-						onCancel={handleCancel}
+						modal={confirmModal}
+						onConfirm={handleConfirmConfirm}
+						onCancel={handleConfirmCancel}
+					/>
+				)}
+				{/* Render input modal if present */}
+				{inputModal && (
+					<InputModal
+						modal={inputModal}
+						onConfirm={handleInputConfirm}
+						onCancel={handleInputCancel}
 					/>
 				)}
 			</View>

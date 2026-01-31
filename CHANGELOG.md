@@ -5,6 +5,71 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-01-31
+
+### Added
+
+- 📝 **Input Modal**: New input modal component for collecting user input during sensitive confirmations
+    - `InputModal` - Fully customizable input modal with text and OTP/PIN modes
+    - `modal.input()` - Generic input modal with full configuration
+    - `modal.confirmWithText()` - Confirmation text input (e.g., type "DELETE" to confirm)
+    - `modal.otp()` - OTP/verification code input with separate boxes
+    - `modal.pin()` - PIN input with masked boxes
+
+- 🔢 **OTP/PIN Input Mode**:
+    - Separate input boxes for each digit (like bank apps, authenticators)
+    - Configurable length (4, 6, 8 digits, etc.)
+    - Auto-submit when all boxes are filled
+    - Auto-advance to next box on input
+    - Backspace navigation between boxes
+    - Paste support for codes
+
+- 🔒 **Input Restrictions**:
+    - `lettersOnly` - Allow only a-zA-Z
+    - `numbersOnly` - Allow only 0-9
+    - `alphanumericOnly` - Allow only a-zA-Z0-9
+    - `disableCopyPaste` - Prevent clipboard access
+    - `uppercase` / `lowercase` - Force case transformation
+    - `minLength` / `maxLength` - Character length limits
+    - `pattern` - Custom regex validation
+    - `confirmationText` - Require exact text match
+    - `caseSensitive` - Control case-sensitive matching
+    - `trimOnSubmit` - Trim whitespace on submit
+
+- 🎨 **OTP Box Customization**:
+    - `boxWidth`, `boxHeight`, `boxGap`, `boxBorderRadius`
+    - `activeBorderColor`, `inactiveBorderColor`, `errorBorderColor`
+    - `filledBackgroundColor`, `emptyBackgroundColor`
+    - `textColor`, `fontSize`
+    - `masked` - Show dots instead of characters
+
+- ✨ **Validation**:
+    - Real-time validation on change (optional)
+    - Custom validator function support
+    - Error message display
+    - Helper text support
+    - Character counter
+    - Match indicator for confirmation text
+
+- 📦 **New Exports**:
+    - `InputModal` component
+    - `InputModalConfig`, `InputModalResult`, `InputMode`, `InputRestrictions`, `OtpConfig` types
+    - `DEFAULT_OTP_CONFIG`, `DEFAULT_PIN_CONFIG` defaults
+    - Input modal styles for customization
+
+- ⌨️ **Keyboard Avoidance**: Input modals now automatically move up when the keyboard appears, ensuring input fields and buttons remain visible and accessible
+
+- 🔲 **Modal Styling Options**:
+    - `rounded` - Option to enable rounded corners (default: `false` for full-width edge-to-edge modal)
+    - When `rounded: false`, modal spans full screen width with no margins
+    - When `rounded: true`, modal has rounded corners and horizontal margins like the confirmation modal
+
+### Fixed
+
+- 🐛 **Toast Variable Arguments**: Fixed a bug where passing string variables as the second argument to toast methods (e.g., `toast.success("Title", messageVariable)`) would only display as a title instead of properly showing both title and description. The `parseArgs` function now correctly handles both literal strings and string variables.
+
+---
+
 ## [1.1.0] - 2026-01-30
 
 ### Added

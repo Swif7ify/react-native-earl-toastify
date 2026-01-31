@@ -17,12 +17,20 @@ A beautiful, customizable toast notification and confirmation modal library for 
 - 🎯 **Always on Top**: Toasts render above all other content
 - 📱 **Full-Width Edge Styling**: No rounded corners for top/bottom toasts
 
-### Confirmation Modal (NEW!)
+### Confirmation Modal
 
 - 🎉 **Promise-based API**: `await modal.confirm()` returns true/false
 - 🎨 **5 Modal Types**: confirm, warning, danger, info, custom
 - 🎬 **4 Animation Types**: scale, fade, slide, none
 - 🔘 **Customizable Buttons**: Text, colors, and styles
+
+### Input Modal (NEW!)
+
+- 📝 **Text Input Mode**: Standard text input with validation
+- 🔢 **OTP/PIN Mode**: Separate input boxes for verification codes
+- 🔒 **Input Restrictions**: Letters only, numbers only, no copy/paste, and more
+- ✅ **Confirmation Text**: Require user to type exact text (e.g., "DELETE")
+- 🎨 **Fully Customizable**: Box styles, colors, sizes, and validation
 
 ### Common Features
 
@@ -406,13 +414,30 @@ interface ToastProviderConfig {
 ```typescript
 const toast = useToast();
 
-// Quick methods
-toast.success(message: string, config?: Partial<ToastConfig>);
-toast.warning(message: string, config?: Partial<ToastConfig>);
-toast.error(message: string, config?: Partial<ToastConfig>);
-toast.info(message: string, config?: Partial<ToastConfig>);
+// Quick methods - flexible API
+// Option 1: Message only
+toast.success("Operation completed!");
 
-// Custom toast
+// Option 2: Title + Description (both inline or variables)
+toast.success("Success!", "Operation completed successfully");
+
+// Option 3: With variables
+const title = "Upload Complete";
+const message = "Your file has been uploaded";
+toast.success(title, message); // Works with variables too!
+
+// Option 4: Message + Config
+toast.success("Saved!", { duration: 5000, position: "bottom" });
+
+// Option 5: Title + Description + Config
+toast.success("Saved!", "Changes have been applied", { position: "bottom" });
+
+// Same API for all types:
+toast.warning(title, message);
+toast.error(title, message);
+toast.info(title, message);
+
+// Custom toast with full config
 toast.show(config: ToastConfig);
 
 // Control methods
@@ -708,6 +733,256 @@ await modal.show({
 ```tsx
 await modal.info("Success!", "Your profile has been updated successfully.");
 // User clicks "OK" to dismiss
+```
+
+---
+
+# 📝 Input Modal (NEW!)
+
+Input modals allow you to collect user input for sensitive confirmations such as:
+
+- **Confirmation text**: E.g., type "DELETE" to confirm account deletion
+- **OTP/Verification codes**: 6-digit codes sent via email or SMS
+- **PIN entry**: 4-digit secure PIN input
+
+## Input Modal Methods
+
+```typescript
+const modal = useModal();
+
+// Text input with confirmation text (user must type exact text)
+const result = await modal.confirmWithText(
+	"Delete Account",
+	"Type DELETE to confirm account deletion",
+	"DELETE",
+	{ caseSensitive: false },
+);
+
+if (result.confirmed) {
+	// User typed "DELETE" and confirmed
+	console.log("User typed:", result.value);
+}
+
+// OTP/Verification code input
+const otpResult = await modal.otp(
+	"Verify Email",
+	"Enter the 6-digit code sent to your email",
+);
+
+if (otpResult.confirmed) {
+	console.log("Code entered:", otpResult.value); // e.g., "123456"
+}
+
+// PIN input (masked by default)
+const pinResult = await modal.pin("Enter PIN", "Enter your 4-digit PIN");
+
+// Custom input modal with full configuration
+const customResult = await modal.input({
+	title: "Enter Amount",
+	message: "How much would you like to transfer?",
+	placeholder: "0.00",
+	keyboardType: "numeric",
+	restrictions: {
+		numbersOnly: true,
+		maxLength: 10,
+	},
+});
+```
+
+## InputModalConfig
+
+| Option              | Type                | Default      | Description                                   |
+| ------------------- | ------------------- | ------------ | --------------------------------------------- |
+| `title`             | `string`            | **required** | Modal title                                   |
+| `message`           | `string`            | **required** | Modal message                                 |
+| `inputMode`         | `InputMode`         | `'text'`     | Input type: `text`, `otp`, or `pin`           |
+| `placeholder`       | `string`            | -            | Placeholder text for text input               |
+| `defaultValue`      | `string`            | -            | Pre-filled value                              |
+| `restrictions`      | `InputRestrictions` | -            | Validation and input restrictions             |
+| `otpConfig`         | `OtpConfig`         | -            | OTP/PIN box configuration                     |
+| `validateOnChange`  | `boolean`           | `false`      | Show validation errors as user types          |
+| `customValidator`   | `function`          | -            | Custom validation function                    |
+| `inputLabel`        | `string`            | -            | Label text above the input                    |
+| `helperText`        | `string`            | -            | Helper text below the input                   |
+| `keyboardType`      | `KeyboardType`      | `'default'`  | Keyboard type                                 |
+| `secureTextEntry`   | `boolean`           | `false`      | Mask input (for text mode)                    |
+| `autoFocus`         | `boolean`           | `true`       | Auto-focus input when modal opens             |
+| `dismissOnBackdrop` | `boolean`           | `false`      | Tap backdrop to dismiss (defaults to `false`) |
+| `rounded`           | `boolean`           | `false`      | Enable rounded corners with margins           |
+
+> [!TIP]
+> Input modals automatically move up when the keyboard appears to keep input fields and buttons visible.
+
+## InputRestrictions
+
+| Option             | Type      | Description                                 |
+| ------------------ | --------- | ------------------------------------------- |
+| `lettersOnly`      | `boolean` | Allow only letters (a-zA-Z)                 |
+| `numbersOnly`      | `boolean` | Allow only numbers (0-9)                    |
+| `alphanumericOnly` | `boolean` | Allow only alphanumeric (a-zA-Z0-9)         |
+| `disableCopyPaste` | `boolean` | Disable copy/paste functionality            |
+| `uppercase`        | `boolean` | Force uppercase input                       |
+| `lowercase`        | `boolean` | Force lowercase input                       |
+| `minLength`        | `number`  | Minimum character length                    |
+| `maxLength`        | `number`  | Maximum character length                    |
+| `pattern`          | `RegExp`  | Custom regex pattern for validation         |
+| `patternError`     | `string`  | Error message when pattern doesn't match    |
+| `confirmationText` | `string`  | Required text (user must type exactly this) |
+| `caseSensitive`    | `boolean` | Case-sensitive confirmation text matching   |
+| `trimOnSubmit`     | `boolean` | Trim whitespace from value on submit        |
+
+## OtpConfig (for OTP/PIN modes)
+
+| Option                  | Type      | Default        | Description                          |
+| ----------------------- | --------- | -------------- | ------------------------------------ |
+| `length`                | `number`  | `6`/`4`        | Number of input boxes (6 OTP, 4 PIN) |
+| `masked`                | `boolean` | `false`/`true` | Mask input with dots (true for PIN)  |
+| `autoSubmit`            | `boolean` | `false`        | Auto-submit when all boxes filled    |
+| `boxWidth`              | `number`  | `48`           | Input box width in pixels            |
+| `boxHeight`             | `number`  | `56`           | Input box height in pixels           |
+| `boxGap`                | `number`  | `12`           | Gap between boxes in pixels          |
+| `boxBorderRadius`       | `number`  | `12`           | Box border radius                    |
+| `activeBorderColor`     | `string`  | `#3B82F6`      | Focused box border color             |
+| `inactiveBorderColor`   | `string`  | `#D1D5DB`      | Unfocused box border color           |
+| `filledBackgroundColor` | `string`  | `#F3F4F6`      | Filled box background color          |
+| `textColor`             | `string`  | `#1F2937`      | Text color inside boxes              |
+| `fontSize`              | `number`  | `24`           | Font size inside boxes               |
+
+## Input Modal Examples
+
+### Delete Confirmation with Text Input
+
+```tsx
+const handleDeleteAccount = async () => {
+	const result = await modal.confirmWithText(
+		"Delete Account",
+		"This action is permanent. Type DELETE to confirm.",
+		"DELETE",
+		{
+			type: "danger",
+			confirmText: "Delete Forever",
+			restrictions: {
+				uppercase: true, // Force uppercase
+				caseSensitive: false, // "delete" or "DELETE" both work
+			},
+		},
+	);
+
+	if (result.confirmed) {
+		await deleteUserAccount();
+		toast.success("Account deleted");
+	}
+};
+```
+
+### OTP Verification
+
+```tsx
+const handleVerifyEmail = async () => {
+	const result = await modal.otp(
+		"Verify Your Email",
+		"Enter the 6-digit code we sent to you",
+		{
+			type: "confirm",
+			confirmText: "Verify",
+			helperText: "Didn't receive the code? Check your spam folder",
+			otpConfig: {
+				length: 6,
+				autoSubmit: true, // Submit automatically when 6 digits entered
+			},
+			restrictions: {
+				numbersOnly: true,
+				disableCopyPaste: false, // Allow pasting code
+			},
+		},
+	);
+
+	if (result.confirmed) {
+		const isValid = await verifyOtpCode(result.value);
+		if (isValid) {
+			toast.success("Email verified!");
+		} else {
+			toast.error("Invalid code. Please try again.");
+		}
+	}
+};
+```
+
+### PIN Entry
+
+```tsx
+const handleEnterPin = async () => {
+	const result = await modal.pin(
+		"Enter Your PIN",
+		"Enter your 4-digit security PIN",
+		{
+			otpConfig: {
+				length: 4,
+				masked: true, // Shows dots instead of numbers
+			},
+			restrictions: {
+				numbersOnly: true,
+				disableCopyPaste: true, // Prevent copy/paste for security
+			},
+		},
+	);
+
+	if (result.confirmed) {
+		const isCorrect = await validatePin(result.value);
+		if (isCorrect) {
+			// Proceed with secure action
+		}
+	}
+};
+```
+
+### Custom Text Input
+
+```tsx
+const handleTransfer = async () => {
+	const result = await modal.input({
+		title: "Transfer Funds",
+		message: "Enter the amount to transfer",
+		inputMode: "text",
+		inputLabel: "Amount ($)",
+		placeholder: "0.00",
+		keyboardType: "decimal-pad",
+		restrictions: {
+			pattern: /^\d+(\.\d{0,2})?$/,
+			patternError: "Please enter a valid amount (e.g., 10.00)",
+			maxLength: 10,
+		},
+		customValidator: (value) => {
+			const amount = parseFloat(value);
+			if (amount < 1) return "Minimum transfer is $1.00";
+			if (amount > 10000) return "Maximum transfer is $10,000.00";
+			return null; // Valid
+		},
+		confirmText: "Transfer",
+		type: "confirm",
+	});
+
+	if (result.confirmed) {
+		await processTransfer(parseFloat(result.value));
+		toast.success(`Transferred $${result.value}`);
+	}
+};
+```
+
+### Input with Letters Only
+
+```tsx
+const result = await modal.input({
+	title: "Enter Your Name",
+	message: "Please enter your first name",
+	inputLabel: "First Name",
+	placeholder: "John",
+	restrictions: {
+		lettersOnly: true, // Only a-z, A-Z allowed
+		minLength: 2,
+		maxLength: 50,
+	},
+});
 ```
 
 ---
