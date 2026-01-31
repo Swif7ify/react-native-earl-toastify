@@ -99,6 +99,39 @@ A beautiful, customizable toast notification and confirmation modal library for 
   </tr>
 </table>
 
+## ✔️ Input Modal Preview
+
+<table>
+  <tr>
+    <td align="center">
+      <b>Confirm</b><br/>
+      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/11.jpg" width="220"/>
+    </td>
+    <td align="center">
+      <b>Warning</b><br/>
+      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/12.jpg" width="220"/>
+    </td>
+    <td align="center">
+      <b>Danger</b><br/>
+      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/13.jpg" width="220"/>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <b>Info</b><br/>
+      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/14.jpg" width="220"/>
+    </td>
+    <td align="center">
+      <b>Custom</b><br/>
+      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/15.jpg" width="220"/>
+    </td>
+    <td align="center">
+      <b>Custom</b><br/>
+      <img src="https://raw.githubusercontent.com/Swif7ify/react-native-earl-toastify/main/example/16.jpg" width="220"/>
+    </td>
+  </tr>
+</table>
+
 ### 🎥🍞 Toast Demo Video
 
 https://github.com/user-attachments/assets/0c96e622-eb7e-4074-ac0a-97a0d04a5d31
@@ -106,6 +139,10 @@ https://github.com/user-attachments/assets/0c96e622-eb7e-4074-ac0a-97a0d04a5d31
 ### 🎥🪟 Modal Demo Video
 
 https://github.com/user-attachments/assets/1b98e721-0aa6-488b-b30b-cc2af8d162cd
+
+### 🎥✔️ Input Modal Demo Video
+
+https://github.com/user-attachments/assets/1dc2e2bd-8f17-497e-9bb9-82d458f19dc5
 
 ## 📦 Installation
 
