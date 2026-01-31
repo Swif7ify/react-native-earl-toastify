@@ -117,27 +117,41 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
 
 	/**
 	 * Helper to parse flexible arguments: (message) or (title, description)
+	 * This function properly handles both literal strings and variables
 	 */
-	const parseArgs = (
-		titleOrMessage: string,
-		descriptionOrConfig?: string | Partial<ToastConfig>,
-		config?: Partial<ToastConfig>,
-	): { title?: string; message: string; config?: Partial<ToastConfig> } => {
-		if (typeof descriptionOrConfig === "string") {
-			// Called as (title, description, config?)
-			return {
-				title: titleOrMessage,
-				message: descriptionOrConfig,
-				config,
-			};
-		} else {
-			// Called as (message, config?)
-			return {
-				message: titleOrMessage,
-				config: descriptionOrConfig,
-			};
-		}
-	};
+	const parseArgs = useCallback(
+		(
+			titleOrMessage: string,
+			descriptionOrConfig?: string | Partial<ToastConfig>,
+			config?: Partial<ToastConfig>,
+		): {
+			title?: string;
+			message: string;
+			config?: Partial<ToastConfig>;
+		} => {
+			// Check if second argument is a string (either literal or variable)
+			if (
+				descriptionOrConfig !== undefined &&
+				typeof descriptionOrConfig === "string"
+			) {
+				// Called as (title, description, config?)
+				return {
+					title: titleOrMessage,
+					message: descriptionOrConfig,
+					config,
+				};
+			} else {
+				// Called as (message, config?) - no title, just message
+				return {
+					message: titleOrMessage,
+					config: descriptionOrConfig as
+						| Partial<ToastConfig>
+						| undefined,
+				};
+			}
+		},
+		[],
+	);
 
 	/**
 	 * Show a success toast

@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { ViewStyle, TextStyle } from "react-native";
+import { InputModalConfig, InputModalResult } from "./inputModalTypes";
 
 /**
  * Modal type determines the color scheme and default icon
@@ -139,6 +140,42 @@ export interface ModalContextValue {
 
 	/** Hide the current modal (resolves as cancelled) */
 	hide: () => void;
+
+	// ============ Input Modal Methods ============
+
+	/** Show an input modal - returns Promise<InputModalResult> */
+	input: (config: InputModalConfig) => Promise<InputModalResult>;
+
+	/**
+	 * Show a confirmation text input modal
+	 * User must type the exact confirmation text to proceed
+	 */
+	confirmWithText: (
+		title: string,
+		message: string,
+		confirmationText: string,
+		config?: Partial<InputModalConfig>,
+	) => Promise<InputModalResult>;
+
+	/**
+	 * Show an OTP/verification code input modal
+	 * Returns the entered code in the result value
+	 */
+	otp: (
+		title: string,
+		message: string,
+		config?: Partial<InputModalConfig>,
+	) => Promise<InputModalResult>;
+
+	/**
+	 * Show a PIN input modal (masked by default)
+	 * Returns the entered PIN in the result value
+	 */
+	pin: (
+		title: string,
+		message: string,
+		config?: Partial<InputModalConfig>,
+	) => Promise<InputModalResult>;
 }
 
 /**

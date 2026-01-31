@@ -9,6 +9,8 @@ import { ModalContextValue } from "./modalTypes";
  * ```tsx
  * const modal = useModal();
  *
+ * // ============ Confirmation Modals ============
+ *
  * // Show a confirmation modal
  * const confirmed = await modal.confirm('Delete Item', 'Are you sure you want to delete this item?');
  * if (confirmed) {
@@ -31,6 +33,48 @@ import { ModalContextValue } from "./modalTypes";
  *   type: 'custom',
  *   confirmText: 'Got it',
  *   cancelText: 'Maybe later',
+ * });
+ *
+ * // ============ Input Modals ============
+ *
+ * // Text input with confirmation text requirement
+ * const result = await modal.confirmWithText(
+ *   'Delete Account',
+ *   'Type DELETE to confirm account deletion',
+ *   'DELETE',
+ *   { caseSensitive: false }
+ * );
+ * if (result.confirmed) {
+ *   // User typed "DELETE" and confirmed
+ * }
+ *
+ * // OTP/Verification code input
+ * const otpResult = await modal.otp(
+ *   'Verify Email',
+ *   'Enter the 6-digit code sent to your email',
+ *   { otpConfig: { length: 6, autoSubmit: true } }
+ * );
+ * if (otpResult.confirmed) {
+ *   console.log('Code:', otpResult.value); // e.g., "123456"
+ * }
+ *
+ * // PIN input (masked by default)
+ * const pinResult = await modal.pin(
+ *   'Enter PIN',
+ *   'Enter your 4-digit PIN',
+ *   { otpConfig: { length: 4 } }
+ * );
+ *
+ * // Custom input modal
+ * const inputResult = await modal.input({
+ *   title: 'Enter Amount',
+ *   message: 'How much would you like to transfer?',
+ *   placeholder: '0.00',
+ *   keyboardType: 'numeric',
+ *   restrictions: {
+ *     numbersOnly: true,
+ *     maxLength: 10,
+ *   },
  * });
  * ```
  */

@@ -8,13 +8,18 @@ import {
 } from "react-native";
 import { useModal, useToast } from "react-native-earl-toastify";
 import Toast from "../utils/Toast";
+
 export default function ToastShowcase() {
 	const toast = useToast();
 	const modal = useModal();
+
+	const toastVariable = "Success!";
+
 	return (
 		<ScrollView style={styles.container}>
 			<Text style={styles.header}>Earl Toastify</Text>
 			<Text style={styles.subTitle}>Toast & Modal Showcase</Text>
+
 			{/* DEFAULT TOASTS */}
 			<Text style={styles.sectionTitle}>
 				Default Toasts (useToast hook)
@@ -23,7 +28,7 @@ export default function ToastShowcase() {
 				style={[styles.button, styles.successBtn]}
 				onPress={() =>
 					toast.success(
-						"Success!",
+						toastVariable,
 						"Operation completed successfully",
 					)
 				}
@@ -63,6 +68,7 @@ export default function ToastShowcase() {
 			>
 				<Text style={styles.buttonText}>Show (Default)</Text>
 			</TouchableOpacity>
+
 			{/* CUSTOMIZED TOASTS */}
 			<Text style={styles.sectionTitle}>
 				Customized Toasts (Toast utility)
@@ -102,6 +108,7 @@ export default function ToastShowcase() {
 			>
 				<Text style={styles.buttonText}>Custom Info</Text>
 			</TouchableOpacity>
+
 			{/* SPECIAL CASES */}
 			<Text style={styles.sectionTitle}>Special Cases</Text>
 			<TouchableOpacity
@@ -163,6 +170,7 @@ export default function ToastShowcase() {
 			>
 				<Text style={styles.buttonText}>Custom Styled</Text>
 			</TouchableOpacity>
+
 			{/* CONFIRMATION MODALS */}
 			<Text style={styles.sectionTitle}>Confirmation Modals</Text>
 			<TouchableOpacity
@@ -249,6 +257,167 @@ export default function ToastShowcase() {
 			>
 				<Text style={styles.buttonText}>Custom Modal</Text>
 			</TouchableOpacity>
+
+			{/* INPUT MODALS */}
+			<Text style={styles.sectionTitle}>Input Modals (NEW!)</Text>
+			<TouchableOpacity
+				style={[styles.button, styles.inputConfirmTextBtn]}
+				onPress={async () => {
+					const result = await modal.confirmWithText(
+						"Delete Account",
+						"This action is permanent. Type DELETE to confirm.",
+						"DELETE",
+						{
+							type: "danger",
+							confirmText: "Delete Forever",
+							restrictions: {
+								uppercase: true,
+								caseSensitive: false,
+							},
+						},
+					);
+					if (result.confirmed) {
+						toast.error("Deleted!", `You typed: ${result.value}`);
+					} else {
+						toast.info("Cancelled", "Account deletion cancelled");
+					}
+				}}
+			>
+				<Text style={styles.buttonText}>Confirm with Text</Text>
+			</TouchableOpacity>
+			<TouchableOpacity
+				style={[styles.button, styles.inputOtpBtn]}
+				onPress={async () => {
+					const result = await modal.otp(
+						"Verify Email",
+						"Enter the 6-digit code sent to your email",
+						{
+							helperText:
+								"Check your spam folder if not received",
+							otpConfig: {
+								length: 6,
+								autoSubmit: true,
+							},
+						},
+					);
+					if (result.confirmed) {
+						toast.success("Verified!", `Code: ${result.value}`);
+					} else {
+						toast.info("Cancelled", "Verification cancelled");
+					}
+				}}
+			>
+				<Text style={styles.buttonText}>OTP Input (6 digits)</Text>
+			</TouchableOpacity>
+			<TouchableOpacity
+				style={[styles.button, styles.inputPinBtn]}
+				onPress={async () => {
+					const result = await modal.pin(
+						"Enter PIN",
+						"Enter your 4-digit security PIN",
+						{
+							otpConfig: {
+								length: 4,
+								masked: true,
+							},
+							restrictions: {
+								disableCopyPaste: true,
+							},
+						},
+					);
+					if (result.confirmed) {
+						toast.success("PIN Accepted!", "Access granted");
+					} else {
+						toast.warning("Cancelled", "PIN entry cancelled");
+					}
+				}}
+			>
+				<Text style={styles.buttonText}>PIN Input (Masked)</Text>
+			</TouchableOpacity>
+			<TouchableOpacity
+				style={[styles.button, styles.inputCustomBtn]}
+				onPress={async () => {
+					const result = await modal.input({
+						title: "Transfer Funds",
+						message: "Enter the amount to transfer",
+						inputLabel: "Amount ($)",
+						placeholder: "0.00",
+						keyboardType: "decimal-pad",
+						restrictions: {
+							numbersOnly: false,
+							maxLength: 10,
+						},
+						customValidator: (value) => {
+							const amount = parseFloat(value);
+							if (isNaN(amount) || amount <= 0)
+								return "Please enter a valid amount";
+							if (amount > 10000)
+								return "Maximum transfer is $10,000";
+							return null;
+						},
+						confirmText: "Transfer",
+						type: "confirm",
+					});
+					if (result.confirmed) {
+						toast.success(
+							"Transferred!",
+							`$${result.value} sent successfully`,
+						);
+					}
+				}}
+			>
+				<Text style={styles.buttonText}>Custom Input (Amount)</Text>
+			</TouchableOpacity>
+			<TouchableOpacity
+				style={[styles.button, styles.inputLettersBtn]}
+				onPress={async () => {
+					const result = await modal.input({
+						title: "Enter Your Name",
+						message: "Please enter your first name",
+						inputLabel: "First Name",
+						placeholder: "John",
+						restrictions: {
+							lettersOnly: true,
+							minLength: 2,
+							maxLength: 30,
+						},
+						confirmText: "Submit",
+					});
+					if (result.confirmed) {
+						toast.success("Hello!", `Welcome, ${result.value}!`);
+					}
+				}}
+			>
+				<Text style={styles.buttonText}>Letters Only Input</Text>
+			</TouchableOpacity>
+			<TouchableOpacity
+				style={[styles.button, styles.inputNoPasteBtn]}
+				onPress={async () => {
+					const result = await modal.input({
+						title: "Secure Code",
+						message: "Enter the code manually (no paste)",
+						inputMode: "otp",
+						otpConfig: {
+							length: 4,
+						},
+						restrictions: {
+							numbersOnly: true,
+							disableCopyPaste: true,
+						},
+						type: "warning",
+						helperText: "Copy/paste is disabled for security",
+					});
+					if (result.confirmed) {
+						toast.success(
+							"Code Accepted!",
+							`Code: ${result.value}`,
+						);
+					}
+				}}
+			>
+				<Text style={styles.buttonText}>No Paste (Security)</Text>
+			</TouchableOpacity>
+
 			{/* MODAL ANIMATIONS */}
 			<Text style={styles.sectionTitle}>Modal Animations</Text>
 			<TouchableOpacity
@@ -303,10 +472,12 @@ export default function ToastShowcase() {
 			>
 				<Text style={styles.buttonText}>No Animation</Text>
 			</TouchableOpacity>
+
 			<View style={{ height: 50 }} />
 		</ScrollView>
 	);
 }
+
 const styles = StyleSheet.create({
 	container: { flex: 1, backgroundColor: "#F9FAFB", padding: 20 },
 	header: {
@@ -356,4 +527,11 @@ const styles = StyleSheet.create({
 	modalInfoBtn: { backgroundColor: "#6366F1" },
 	modalCustomBtn: { backgroundColor: "#8B5CF6" },
 	animationBtn: { backgroundColor: "#14B8A6" },
+	// Input Modal button styles
+	inputConfirmTextBtn: { backgroundColor: "#DC2626" },
+	inputOtpBtn: { backgroundColor: "#0891B2" },
+	inputPinBtn: { backgroundColor: "#7C3AED" },
+	inputCustomBtn: { backgroundColor: "#059669" },
+	inputLettersBtn: { backgroundColor: "#EA580C" },
+	inputNoPasteBtn: { backgroundColor: "#BE185D" },
 });

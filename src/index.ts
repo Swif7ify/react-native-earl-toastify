@@ -8,6 +8,7 @@ export { ToastContainer } from "./ToastContainer";
 export { ModalProvider } from "./ModalProvider";
 export { useModal } from "./useModal";
 export { ConfirmModal } from "./ConfirmModal";
+export { InputModal } from "./InputModal";
 
 // Types
 export type {
@@ -30,6 +31,17 @@ export type {
 	ModalProviderConfig,
 } from "./modalTypes";
 
+// Input Modal Types
+export type {
+	InputMode,
+	InputRestrictions,
+	OtpConfig,
+	InputModalConfig,
+	InputModalResult,
+	InputModal as InputModalData,
+} from "./inputModalTypes";
+export { DEFAULT_OTP_CONFIG, DEFAULT_PIN_CONFIG } from "./inputModalTypes";
+
 // Styles (for customization)
 export {
 	TOAST_COLORS,
@@ -51,6 +63,23 @@ export {
 	baseButtonStyle,
 	buttonTextStyle,
 } from "./modalStyles";
+
+// Input Modal Styles (for customization)
+export {
+	inputContainerStyle,
+	inputLabelStyle,
+	baseInputStyle,
+	inputTextStyle,
+	inputFocusedStyle,
+	inputErrorStyle,
+	errorTextStyle,
+	helperTextStyle,
+	otpContainerStyle,
+	otpBoxStyle,
+	otpTextStyle,
+	getOtpBoxStyle,
+	INPUT_VALIDATION_COLORS,
+} from "./inputModalStyles";
 
 // Animation utilities (for advanced customization)
 export {
