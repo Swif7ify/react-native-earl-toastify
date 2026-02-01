@@ -39,6 +39,9 @@ A beautiful, customizable toast notification and confirmation modal library for 
 - 🪶 **Lightweight**: Zero external animation dependencies
 - 🏛️ **New Architecture Ready**: Fully compatible with React Native's New Architecture (Fabric)
 
+## Snack Preview
+https://snack.expo.dev/@rinubi/react-native-earl-toastify
+
 ## 🍞 Toast Preview
 
 <table>
