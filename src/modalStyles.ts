@@ -1,4 +1,4 @@
-import { ViewStyle, TextStyle } from "react-native";
+import { ViewStyle, TextStyle, Platform } from "react-native";
 import { ModalType } from "./modalTypes";
 
 /**
@@ -80,15 +80,26 @@ export const getModalColors = (type: ModalType): ModalColors => {
 export const modalContainerStyle: ViewStyle = {
 	backgroundColor: "#FFFFFF",
 	borderRadius: 16,
+	overflow: Platform.OS === "android" ? "hidden" : "visible",
 	padding: 24,
 	marginHorizontal: 24,
 	maxWidth: 400,
 	width: "100%",
-	shadowColor: "#000",
-	shadowOffset: { width: 0, height: 4 },
-	shadowOpacity: 0.15,
-	shadowRadius: 20,
-	elevation: 10,
+	...Platform.select({
+		ios: {
+			shadowColor: "#000",
+			shadowOffset: { width: 0, height: 4 },
+			shadowOpacity: 0.15,
+			shadowRadius: 20,
+		},
+		android: {
+			// Avoid square elevation shadow artifacts during animations
+			elevation: 0,
+			borderWidth: 1,
+			borderColor: "rgba(0, 0, 0, 0.08)",
+		},
+		default: {},
+	}),
 };
 
 /**

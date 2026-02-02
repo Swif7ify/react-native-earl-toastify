@@ -826,6 +826,8 @@ export const InputModal: React.FC<InputModalProps> = ({
 						},
 					]}
 					pointerEvents="box-none"
+					renderToHardwareTextureAndroid={true}
+					needsOffscreenAlphaCompositing={true}
 				>
 					<View
 						style={[

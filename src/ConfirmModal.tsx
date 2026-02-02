@@ -195,6 +195,8 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
 					},
 				]}
 				pointerEvents="box-none"
+				renderToHardwareTextureAndroid={true}
+				needsOffscreenAlphaCompositing={true}
 			>
 				<View
 					style={[
