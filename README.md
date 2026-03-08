@@ -1027,6 +1027,12 @@ const result = await modal.input({
 
 ---
 
-## 📄 License
+## License
 
-MIT © Earl
+MIT
+
+## ❤️ Sponsor
+
+If this project helps you, consider sponsoring its development:
+
+👉 https://github.com/sponsors/Swif7ify
