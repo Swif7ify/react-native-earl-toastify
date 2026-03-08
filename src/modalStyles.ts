@@ -93,8 +93,7 @@ export const modalContainerStyle: ViewStyle = {
 			shadowRadius: 20,
 		},
 		android: {
-			// Avoid square elevation shadow artifacts during animations
-			elevation: 0,
+			elevation: 9999999,
 			borderWidth: 1,
 			borderColor: "rgba(0, 0, 0, 0.08)",
 		},
@@ -195,6 +194,6 @@ export const modalOverlayStyle: ViewStyle = {
 	left: 0,
 	right: 0,
 	bottom: 0,
-	zIndex: 10000,
-	elevation: 10000,
+	zIndex: 9999999,
+	elevation: 9999999,
 };

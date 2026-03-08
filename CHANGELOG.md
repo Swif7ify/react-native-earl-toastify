@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.3] - 2026-03-08
+
+### Fixed
+
+- 🔝 **Z-Index Priority**: Toasts and modals now always render on top of all other content regardless of the app's view hierarchy
+    - Toast container `zIndex`/`elevation` increased from `9999` to `999999`
+    - Modal overlay `zIndex`/`elevation` increased from `10000` to `9999999`
+    - Individual toast `elevation` increased from `5` to `999999` on Android to prevent native views from rendering above them
+    - Modal container `elevation` on Android increased from `0` to `9999999` to guarantee modals stay above all app content
+    - Modals maintain higher priority than toasts so they always appear on top when both are visible
+
 ## [1.2.2] - 2026-02-2
 
 ### Updated

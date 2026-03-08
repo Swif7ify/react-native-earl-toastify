@@ -101,8 +101,8 @@ const styles = StyleSheet.create({
 		position: "absolute",
 		left: 0,
 		right: 0,
-		zIndex: 9999,
-		elevation: 9999,
+		zIndex: 999999,
+		elevation: 999999,
 		pointerEvents: "box-none",
 	},
 	toastGap: {
